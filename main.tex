@@ -1,0 +1,149 @@
+% \documentclass[aspectratio=169,notes]{beamer}       % print frame + notes
+% \documentclass[aspectratio=169,notes=only]{beamer}   % only notes
+\documentclass[aspectratio=169]{beamer}              % only frames
+
+\usepackage{build/gen/Autoload}
+
+
+% Imports
+\usepackage{pdfpages, url, local_macros, pgffor, tikz, tcolorbox}
+\usepackage{hyperref, tabularx, caption, xr, fixltx2e, rotating, caption, mdframed}
+
+\usepackage{ulem} 
+% use \sout for strikethrough text
+
+% \usetheme{berlin}
+% \usetheme[lightmode-fill]{digital-minimal}
+% \usetheme[darkmode]{digital-minimal}
+% \usetheme[sectionpage=none, numbering=none, progressbar=foot]{metropolis}
+
+
+
+
+% \newenvironment{itemizetest}
+% {\begin{list}{$\triangleright$}{
+% % \leftmargin=5mm
+% % \labelwidth=3mm
+% % \labelsep=3mm
+% }}{\end{list}}
+%
+% \renewcommand{\outlinei}{itemizetest}
+
+
+%% Footnote without marker
+\let\svthefootnote\thefootnote
+\newcommand\blankfootnote[1]{%
+  \let\thefootnote\relax\footnotetext{#1}%
+  \let\thefootnote\svthefootnote%
+}
+
+% ┌────────┐
+% │ Minted │
+% └────────┘
+\usepackage[newfloat]{minted} 
+\usemintedstyle{lovelace}
+% \usemintedstyle{bw}
+% \usepackage{pkgs/more_minted}
+\usepackage{pkgs/bubblewrap} % Fix linewrap of \texttt{}
+
+% ┌───────────────────┐
+% │ Language Settings │
+% └───────────────────┘
+\usepackage[T1]{fontenc}   % modern 8-bit font encoding
+% \usepackage[utf8]{inputenc}
+\usepackage[utf8]{inputenc}
+\usepackage{fontspec} 
+\usepackage[ngerman, math=normal]{babel}
+
+
+\usepackage{polyglossia}
+\setmainlanguage[babelshorthands=true]{german}
+
+\usepackage[autostyle=true, german=quotes]{csquotes} 
+\MakeOuterQuote{"}
+
+\useshorthands{"}
+\newif\ifclosequote
+\defineshorthand{""}{%
+  \ifclosequote
+    \closequotefalse\dq
+  \else
+    \closequotetrue\glqq
+  \fi}
+
+  \newcommand{\seenextnote}{%
+      \vfill
+      \hfill\LARGE Siehe nächste Notiz \(\Longrightarrow\)\\\vspace{.4em}
+} 
+
+
+% ┌───────────────────────┐
+% │ End Language Settings │
+% └───────────────────────┘
+
+
+\usetheme[sectionpage=none, numbering=none, progressbar=foot]{metropolis}
+
+% Make outlines pretty
+\usepackage{outlines}
+% \setbeamertemplate{itemize item}[triangle]
+% \setbeamertemplate{itemize subitem}{\raisebox{1pt}{$>$}}
+
+% \setbeamertemplate{itemize item}[square]
+% triangle, circle square or ball
+\setbeamertemplate{itemize item}{\raisebox{1.61pt}{\tiny$\blacksquare$}}
+\vspace{.3em}
+\setbeamertemplate{itemize subitem}{\raisebox{.8pt}{\vspace{.3em}$\blacktriangleright$}}
+\setbeamertemplate{itemize subsubitem}{\raisebox{.8pt}{$>$}}
+
+% reset footnote counter  every frame
+\AtBeginEnvironment{frame}{\setcounter{footnote}{0}}
+
+% \definecolor{color_primary}{HTML}{00cccc}
+
+
+\hypersetup{
+  colorlinks   = true,    % Colours links instead of ugly boxes
+  urlcolor     = cyan,    % Colour for external hyperlinks
+  linkcolor    = cyan,    % Colour of internal links
+  citecolor    = red,     % Colour of citations
+}
+
+
+%Configuration
+%\geometry{papersize=11.02,6.2}
+
+
+
+%Information to be included in the title page:
+% \title{\parbox{.6\linewidth}{\raggedright IAWAKEE -- \Large Lach und Sachgeschichten\\ aus Mikroklimaforschung und Informatik}}
+\title{IAWAKEE -- Lach und Sachgeschichten aus Mikroklimaforschung und Informatik}
+% \author{Linus Schmidt}
+% \institute{DBG-Schweich}
+%\date{00.00.2000}
+%\date{\today}
+\date{}
+
+\begin{document}
+
+%% Titlepage
+\frame{\titlepage}
+
+
+%% TOC-Tree
+\begin{frame}
+    Inhaltsübersicht:
+    \tableofcontents
+\end{frame}
+
+%% INPUT SECTIONS
+\foreach \i in \ListOfSectionsWithoutExt {%
+    \edef\FileName{\i}%
+    \input{\FileName}%
+}
+\pagebreak
+
+
+% \input{sources_slide.tex}
+
+\end{document}

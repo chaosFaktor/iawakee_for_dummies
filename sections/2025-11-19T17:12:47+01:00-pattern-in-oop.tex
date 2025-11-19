@@ -1,0 +1,106 @@
+% 19.11.2025; 17:11:47
+
+
+\section[Pattern in der Objekt-Orientierten Programmierung]{OOP Pattern}%
+\frame{\sectionpage}
+\begin{frame}[fragile]%
+    \frametitle{Pattern in der Objekt-Orientierten Programmierung}
+    {\large Factory Method Pattern}\vspace{.2em}
+
+    \begin{outline}
+        \1[] \begin{minted}[fontsize=\fontsize{7}{8}] {java}
+public interface Postage { String type(); }
+
+public class RegularPostage implements Postage {
+    public String type() { return "Regular"; }
+}
+
+public class ExpressPostage implements Postage {
+    public String type() { return "Express"; }
+}
+
+public final class PostageFactory {
+    private PostageFactory() {}
+    public static Postage by_price(double price_for_product) {
+        if (price_for_product > 30) {
+            return new ExpressPostage();
+        } else {
+            return new RegularPostage();
+        }
+    }
+}
+        \end{minted}
+    \end{outline}
+
+\end{frame}
+\note {
+    \begin{outline}
+        \1 Wenn verschiedene Klassen ein \textrm{Interface} implementieren können wir zur Laufzeit entscheiden ein Objekt welcher \textrm{konkreten} Klasse wir zurückgeben
+        \1 Methode \texttt{by\_price} von Klasse PostageFactory gibt interface Postage zurück.
+        \2 Methode heißt Factory method / ""fabrik methode""
+    \end{outline}
+}
+\begin{frame}
+    \begin{outline}
+        \1 Wenn verschiedene Klassen ein \textrm{Interface} implementieren können wir zur Laufzeit entscheiden ein Objekt welcher \textrm{konkreten} Klasse wir zurückgeben
+        \2 Hier gibt die Methode \texttt{by\_price} der Klasse \texttt{PostageFactory} das interface \texttt{Postage} zurück.
+        \2 Diese Methode heißt Factory method oder ""Fabrik Methode""
+    \end{outline}
+    
+\end{frame}
+
+
+\begin{frame}[fragile]%
+    \frametitle{Pattern in der Objekt-Orientierten Programmierung}
+    {\large Builder Pattern}\vspace{.2em}
+
+    \begin{outline}
+        \1[] \begin{minted}[fontsize=\fontsize{7}{7.4}]{python}
+class House:
+    def __init__(self, walls, roof, door):
+        self.walls = walls
+        self.roof = roof
+        self.door = door
+
+class HouseBuilder:
+    def __init__(self):
+        self._walls = "concrete" # Houses have concrete walls by default
+        self._roof = "tile"      # Houses have tile roofs by default
+        self._door = "glass"     # Houses have glass by default
+    def walls(self, style):
+        self._walls = style
+        return self
+    def roof(self, style):
+        self._roof = style
+        return self
+    def door(self, style):
+        self._door = style
+        return self
+    def build(self):
+        return House(self._walls, self._roof, self._door)
+        \end{minted}
+    \end{outline}
+
+\end{frame}
+\note {
+    \begin{outline}
+        \1 Hier Übertragen wir die Verantwortung die Klasse \texttt{House} zu konstruieren an die Klasse \texttt{HouseBuilder}
+        \1 Dadurch müssen wir den \texttt{Konstruktor} von \texttt{House} nicht mehr selber  aufrufen und können dadurch Standard Werte festlegen.
+        \1 Unnötig in python in diesem kontext
+    \end{outline}
+}
+
+\begin{frame}[fragile]
+    \begin{outline}
+        \1 Hier Übertragen wir die Verantwortung die Klasse \texttt{House} zu konstruieren an die Klasse \texttt{HouseBuilder}
+        \1 Dadurch müssen wir den \texttt{Konstruktor} von \texttt{House} nicht mehr selber  aufrufen und können dadurch Standard Werte festlegen.
+    \end{outline}
+    \begin{minted} {python}
+       house = HouseBuilder()
+                 .walls("brick")
+                 .roof("flat")
+                 .door("oak")
+                 .build()
+    \end{minted}
+\end{frame}
+
