@@ -171,24 +171,23 @@ alan.greet()
 
 \subsection{Deklarative Programmierung}%
 \begin{frame}[fragile]
-    \frametitle{Paradigmen Deklarative Programmierung}
+    \frametitle{Paradigmen -- Deklarative Programmierung}
     \begin{outline}
         \0 Deklarative Programmierung\\
         \vspace{1.4em}
         \0 \textbf{Zielsetzung:}
         \vfill
-            \1 (Veränderlicher) Anwendungszustand existiert nicht.
+            \1 (Veränderbarer) Anwendungszustand existiert nicht.
                 \2 Setzen wir einmal eine variable dürfen wir sie nicht verändern
-                \2 State wird in Funktionen ""gekapselt"", state darf nicht außerhalb von Funktionen erscheinen
+                \2 State wird mit hilfe von Funktionen ""gekapselt"", state darf nicht außerhalb von Funktionen erscheinen
                 \vfill
 
             \begin{minipage} {.3\linewidth}
 \begin{minted}[escapeinside=||] {python}
-|\sout{\texttt{a = 100}}|
+a = 1
 def main():
-    a = 1
-    b = 2
-    print(a+b)
+    |\sout{global a}|
+    print(a+2)
 \end{minted}
             \end{minipage}
             \begin{minipage} {.3\linewidth}
@@ -203,13 +202,11 @@ def main():
             \end{minipage}
             \begin{minipage} {.3\linewidth}
 \begin{minted}[escapeinside=||] {python}
-def add(a,b):
-    return a + b
+import time
 
-def main():
-    a = 1
-    b = 2
-    print(add(a,b))
+def timestamp_add_one():
+    |\sout{ts = time.time()}|
+    return ts + 1
 \end{minted}
         \end{minipage}
 \end{outline}
@@ -354,18 +351,17 @@ def main():
     \frametitle{Paradigmen -- Deklarative Programmierung}
     \vfill\vspace{.3em}
         \begin{minipage} {.4\linewidth}
-            \begin{minted}[escapeinside=||, fontsize=\fontsize{8pt}{9pt}] {python}
-def reduce_once(fn, akk, liste, index):
+            \begin{minted}[escapeinside=||, fontsize=\fontsize{9pt}{10pt}] {python}
+def fold_once(fn, akk, liste, index):
     if index < len(liste):
         newakk = fn(akk, liste[index])
-        res = reduce_once(fn, newakk, liste, index + 1)
+        res = fold_once(fn, newakk, liste, index + 1)
         return res
     else:
         return akk
 
-# Reduziert die Liste liste mithilfe der Funktion fn zu einem einzelnen Wert
-def reduce(fn, akk, liste):
-    return reduce_once(fn, akk, liste, 0)
+def fold(fn, akk, liste):
+    return fold_once(fn, akk, liste, 0)
 
 def do_for_all(akk, wert):
     return akk + wert
@@ -373,12 +369,13 @@ def do_for_all(akk, wert):
 def main():
     liste = [1,2,3,4,5]
     akk = 0
-    summe = reduce(do_for_all, akk, liste)
+    summe = fold(do_for_all, akk, liste)
     print(summe)
     \end{minted}
     \end{minipage}
     \vspace{.3em}
 \end{frame}
+
 
 \begin{frame}[fragile]
     \frametitle{Paradigmen -- Deklarative Programmierung}
@@ -391,18 +388,94 @@ summe = sum(werte)
 print(summe)
             \end{minted}
             \vfill
-        \1 Ist äquivalent zu:
+        \1 Kann wie folgt implementiert werden:
         \2[]\begin{minted}[fontsize=\fontsize{9}{11}] {python}
-def do_for_all(akk, wert):
-    return akk + wert
+def sum(werte):
+    def do_for_all(akk, wert):
+        return akk + wert
 
-werte = [1,2,3,4,5]
-akk = 0
-summe = reduce(do_for_all, akk, werte)
-print(summe)
+    werte = [1,2,3,4,5]
+    akk = 0
+    summe = fold(do_for_all, akk, werte)
+    return summe
             \end{minted}
         \end{outline}
 \end{frame}
+
+\begin{frame} [fragile]
+    \frametitle{Paradigmen -- Deklarative Programmierung}
+    \begin{minipage} {.4\linewidth}
+        \begin{minted} {python}
+def main(werte):
+    summe = 0
+    for wert in werte:
+        summe = summe + wert
+    return summe
+        \end{minted}
+    \end{minipage}
+    \hspace{.2em}\vline\hspace{.2em}
+    \begin{minipage} {.4\linewidth}
+        \begin{minted} {python}
+def main(werte):
+    return sum(werte)
+        \end{minted}
+    \end{minipage}
+\end{frame}
+\note {
+    \begin{outline}
+        \1 Links: Imperative Programmierung
+            \2 Gehe werte in der Liste Durch
+            \3 Rechne den aktuellen Listenwert auf die Summe hinzu
+            \2 Gebe Summe zurück
+        \1 Rechts: Deklarative Programmierung
+            \2 Das Ergebnis ist die Summe aller Werte.
+            \2[$\to$] Beschreiben des Ergebnisses statt
+    \end{outline}
+}
+
+
+\begin{frame} [fragile]
+    \frametitle{Paradigmen -- Deklarative Programmierung}
+    \vspace{.4em}
+    \begin{minted}{javascript}
+let werte = [0.2912, 0.421, ...];
+let res = werte.iter()
+            .map(|wert| wert * 100)
+            .map(|wert| wert.round())
+            .filter(|i| i > 50)
+            .fold(0, |avg, i| avg + i / werte.len());
+    \end{minted}
+    \vspace{9em}
+\end{frame}
+\begin{frame} [fragile]
+    \frametitle{Paradigmen -- Deklarative Programmierung}
+    \vspace{.4em}
+    \begin{minted}{javascript}
+let werte = [0.2912, 0.421, ...];
+let res = werte.iter()
+            .map(|wert| wert * 100)
+            .map(|wert| wert.round())
+            .filter(|i| i > 50)
+            .fold(0, |avg, i| avg + i / werte.len());
+    \end{minted}
+    \noindent\rule{\linewidth}{0.4pt}
+    \begin{minted} {sql}
+SELECT AVG(gerundeter_wert) AS durchschnitt_gefiltert
+    FROM (
+      SELECT ROUND(wert * 100.0) AS gerundeter_wert
+      FROM werte_tbl
+    ) t WHERE gerundeter_wert > 50;
+    \end{minted}
+\end{frame}
+\note {
+    \begin{outline}[enumerate]
+        \1 Das ergebnis ist die Repräsentation aller Werte als Prozent-, statt Kommazahlen
+        \1 Diese Prozentzahlen sind gerundet
+        \1 Nur Prozentzahlen > 50 werden ausgewählt
+        \1 Von den ausgewählten Zahlen wird der Durchschnitt errechnet.
+        \1 SQL ebenfalls deklarativ!
+    \end{outline}
+}
 
 \begin{frame}[fragile]
     \frametitle{Paradigmen -- Deklarative Programmierung}

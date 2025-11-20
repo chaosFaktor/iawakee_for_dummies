@@ -130,7 +130,15 @@
 \begin{document}
 
 %% Titlepage
-\frame{\titlepage}
+\frame{%
+    \titlepage
+%   Qr Code
+    \begin{textblock*}{\textwidth}(\paperwidth-3.2cm, \paperheight-2.8cm)
+      \noindent\makebox[\textwidth][l]{
+          \raggedleft \includegraphics[height=2.4cm]{assets/this-presentation-qr.png}
+  }
+\end{textblock*}
+}
 
 
 %% TOC-Tree
