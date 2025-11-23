@@ -23,6 +23,25 @@ build: buildgen
 	tectonic -Z shell-escape main.tex
 	# xelatex ./main.tex -shell-escape && biber main &&  xelatex -shell-escape ./main.tex && xelatex -shell-escape ./main.tex
 
+# build-all: buildgen
+#     #!/usr/bin/env xonsh
+#     ind = 0
+#     for i in [
+#         "\\documentclass[aspectratio=169]{beamer}",
+#         "\\documentclass[aspectratio=169,notes=only]{beamer}",
+#         "\\documentclass[aspectratio=169,notes]{beamer}"
+#     ]:
+#         echo @(i) >> build/gen/Autoload.sty
+#         just build
+#         if ind == 0:
+#             cp main.pdf output/slides.pdf
+#         if ind == 1:
+#             cp main.pdf output/notes.pdf
+#         if ind == 2:
+#             cp main.pdf output/notes_and_slides.pdf
+#         ind += 1
+#         sed -i '$d' build/gen/Autoload.sty # Remove last line
+
 buildgen:
 	# Create sections file
 	echo > build/gen/sections.tex

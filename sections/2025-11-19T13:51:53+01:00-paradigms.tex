@@ -195,8 +195,8 @@ def main():
 def main():
     a = 1
     b = 2
-    |\sout{\texttt{c = a + b}}|
-    print(c)
+    |\sout{\texttt{a = a + b}}|
+    print(a)
 
 \end{minted}
             \end{minipage}
@@ -271,8 +271,8 @@ main()
 
     \begin{minipage} {.55\linewidth}
         \begin{minted}[escapeinside=||] {python}
-def f(a):
-    return a() + 2
+def f(b):
+    return b() + 2
 
 def a():
     return 1
@@ -296,8 +296,8 @@ def main():
 
     \begin{minipage} {.55\linewidth}
         \begin{minted}[escapeinside=||] {python}
-def f(a):
-    return a() + 2
+def f(b):
+    return b() + 2
 
 def a():
     return 1
@@ -321,8 +321,68 @@ def main():
         \vfill
     \end{minipage}
     \vfill
-    
 \end{frame}
+
+\begin{frame} [fragile]
+    \frametitle{Paradigmen -- Deklarative Programmierung}
+    \vspace{.3em}
+    {\large Neue Spielregel:}\\
+    % \vspace{.3em}
+
+    \vfill
+    \begin{minipage} {.55\linewidth}
+        \begin{minted}[escapeinside=||] {python}
+while True:
+    print("to infinity and beyond!")
+    \end{minted}
+    \vspace{1em}
+    {\hspace{.25\linewidth}\Huge$\Downarrow$\hfill\Huge$\Downarrow$\hspace{.25\linewidth}}
+    \vspace{1em}
+    \begin{minted}{python}
+def do_forever():
+    print("to infinity and beyond!")
+    do_forever()
+    \end{minted}
+    \end{minipage}
+    \begin{minipage} {.4\linewidth}
+    \end{minipage}
+    \vfill
+    \vfill
+\end{frame}
+\begin{frame} [fragile]
+    \frametitle{Paradigmen -- Deklarative Programmierung}
+    \vspace{.3em}
+    {\large Neue Spielregel:}\\
+    % \vspace{.3em}
+
+    \vfill
+    \begin{minipage} {.55\linewidth}
+        \begin{minted}[escapeinside=||] {python}
+while True:
+    print("to infinity and beyond!")
+    \end{minted}
+    \vspace{1em}
+    {\hspace{.25\linewidth}\Huge$\Downarrow$\hfill\Huge$\Downarrow$\hspace{.25\linewidth}}
+    \vspace{1em}
+    \begin{minted}{python}
+def do_forever():
+    print("to infinity and beyond!")
+    do_forever()
+    \end{minted}
+    \end{minipage}
+    \begin{minipage} {.4\linewidth}
+        {\large\bf Kein Designpattern!}~\\\vspace{.6em}
+
+        Aber ein Konzept -- ""Rekursion"":\\
+
+        Eine \textrm{Funktion} kann sich selbst aufrufen.
+        \vspace{.9em}
+        \vfill
+    \end{minipage}
+    \vfill
+    \vfill
+\end{frame}
+
 
 \begin{frame}[fragile]
     \frametitle{Paradigmen -- Deklarative Programmierung}
@@ -405,6 +465,7 @@ def sum(werte):
 \begin{frame} [fragile]
     \frametitle{Paradigmen -- Deklarative Programmierung}
     \begin{minipage} {.4\linewidth}
+        ~\\
         \begin{minted} {python}
 def main(werte):
     summe = 0
@@ -412,13 +473,17 @@ def main(werte):
         summe = summe + wert
     return summe
         \end{minted}
+        ~\\
     \end{minipage}
-    \hspace{.2em}\vline\hspace{.2em}
+    % \hspace{.8em}\vline\hspace{.8em}
+    \hfill\vline\hfill
     \begin{minipage} {.4\linewidth}
+        ~\\
         \begin{minted} {python}
 def main(werte):
     return sum(werte)
         \end{minted}
+        ~\\
     \end{minipage}
 \end{frame}
 \note {
@@ -476,12 +541,59 @@ SELECT AVG(gerundeter_wert) AS durchschnitt_gefiltert
         \1 SQL ebenfalls deklarativ!
     \end{outline}
 }
+\begin{frame} [fragile]
+    \frametitle{Paradigmen -- Deklarative Programmierung}
+    \vspace{.4em}
+    \begin{minipage}{.4\linewidth}
+    \begin{minted}[fontsize=\fontsize{9}{11}]{python}
+werte = [0.2912, 0.421, ...]
+
+def to_percent(wert):
+    return wert * 100
+def rounded(wert):
+    return round(wert)
+def is_gt_50(wert):
+    return wert > 50
+def build_avg(length):
+    def avg(akk, wert):
+        return akk + wert / length
+    return avg
+res = werte .map(to_percent)
+            .map(rounded)
+            .filter(is_gt_50)
+            .fold(0, build_avg(len(werte)));
+    \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage} {.45\linewidth}
+        \begin{minted}[fontsize=\fontsize{10}{11}]{python}
+werte = [0.2912, 0.421, ...]
+
+avg = 0
+for wert in werte:
+    a = wert * 100
+    b = round(a)
+    if b > 50:
+        c = b
+        avg = avg + c / len(werte)
+    \end{minted}
+    \end{minipage}
+\end{frame}
+\note{
+    \begin{outline}
+        \1 etwas Gefährlich
+        \1 IdR nicht wirklich optimiert, aber möglich!
+        \1 Rust z.B. kann eigentlich rekursive Prozesse $\to$ iterativ umsetzen
+        \1 Rekursive Prozesse lassen sich problemlos iterativ dastellen
+    \end{outline}
+}
+
 
 \begin{frame}[fragile]
     \frametitle{Paradigmen -- Deklarative Programmierung}
     
     \begin{outline}
-        \0 {\large Ein letztes:}
+        \0 {\large Currying:}
         \1[] Eine Funktion, die mehrere Parameter nimmt kann wie folgt in eine Serie von Funktionen aufgebrochen werden:
         \1[] \begin{minted}[fontsize=\fontsize{9}{11}] {python}
 def add(a, b):
@@ -489,7 +601,7 @@ def add(a, b):
 
 def add_curried(a):
     def add_b(b):
-        return a + b
+        return add(a,b)
     return add_b
 
 add5 = add_curried(5) # Erzeugt eine Funktion, die 5 + b rechnet
